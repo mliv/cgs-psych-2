@@ -1,0 +1,272 @@
+# RESULTS #
+
+
+//// MLP ////////////////////////////////////////////////////////////////
+
+
+
+
+              precision    recall  f1-score   support
+
+           0       0.87      1.00      0.93     55700
+           1       0.00      0.00      0.00      8537
+	
+    accuracy                           0.87     64237
+   macro avg       0.43      0.50      0.46     64237
+weighted avg       0.75      0.87      0.81     64237
+
+julia> # Cross validation
+
+julia> @sk_import model_selection: cross_val_score
+┌ Warning: Module model_selection has been ported to Julia - try `import ScikitLearn: CrossValidation` instead
+└ @ ScikitLearn.Skcore C:\Users\Matei\.julia\packages\ScikitLearn\NJwUf\src\Skcore.jl:179
+WARNING: redefinition of constant cross_val_score. This may fail, cause incorrect answers, or produce other errors.
+PyObject <function cross_val_score at 0x000000005444C820>
+
+julia> cross_val_score( MLPClassifier(hidden_layer_sizes=(30, 50, 60, 10, 10, 10)), X_train, y_train)
+5-element Array{Float64,1}:
+ 0.9306854776874712
+ 0.8678883606808772
+ 0.9301870878699586
+ 0.9305294636353181
+ 0.928765862822528
+
+julia> @time cross_val_score( MLPClassifier(hidden_layer_sizes=(30, 50, 60, 10, 10, 10)), X_train, y_train, cv=10)
+C:\Users\Matei\.julia\conda\3\lib\site-packages\sklearn\neural_network\_multilayer_perceptron.py:614: ConvergenceWarning: Stochastic Optimizer: Maximum iterations (200) reached and the optimization hasn't converged yet.
+  warnings.warn(
+1774.530007 seconds (104.25 k allocations: 5.529 MiB)
+10-element Array{Float64,1}:
+ 0.9316822573224965
+ 0.9511577978837602
+ 0.9250115013034811
+ 0.9470173286305781
+ 0.9549915657107806
+ 0.9430302100904769
+ 0.9277718141389357
+ 0.9500843428921945
+ 0.9526876773253585
+ 0.9508473276589219
+
+julia> @time cross_val_score( MLPClassifier(hidden_layer_sizes=(30, 50, 60, 10, 10, 10)), X_train, y_train, cv=10)
+1437.625758 seconds (97 allocations: 5.641 KiB)
+10-element Array{Float64,1}:
+ 0.9551449164238613
+ 0.9297653734089864
+ 0.9421101058119921
+ 0.9470940039871185
+ 0.9447170679343659
+ 0.9510044471706793
+ 0.9265450084342892
+ 0.9404232479681031
+ 0.9472433095621502
+ 0.9329805996472663
+
+Takes 25-30 minutes (one hour for both runs) so iterating on this is time consuming
+5-fold cross validation will have to do, though it's clearly not as good.
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+//// TREE /////////////////////////////////////////////////////////////////////////////
+
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00    113188
+           1       1.00      1.00      1.00     17230
+
+    accuracy                           1.00    130418
+   macro avg       1.00      1.00      1.00    130418
+weighted avg       1.00      1.00      1.00    130418
+
+              precision    recall  f1-score   support
+
+           0       0.96      0.97      0.96     55700
+           1       0.77      0.77      0.77      8537
+
+    accuracy                           0.94     64237
+   macro avg       0.87      0.87      0.87     64237
+weighted avg       0.94      0.94      0.94     64237
+
+
+julia> cross_val_score( DecisionTreeClassifier(), X_train, y_train)
+5-element Array{Float64,1}:
+ 0.9349792976537341
+ 0.9352093237233553
+ 0.9370495322803251
+ 0.9362419967028333
+ 0.9377372234788943
+
+julia> @time cross_val_score( DecisionTreeClassifier(), X_train, y_train, cv=10)
+  3.370360 seconds (73 allocations: 4.234 KiB)
+10-element Array{Float64,1}:
+ 0.9384296886980524
+ 0.9349026222971937
+ 0.9370495322803251
+ 0.9376629351326483
+ 0.9403465726115626
+ 0.9365128047845422
+ 0.9362061033583806
+ 0.93421254408833
+ 0.9363545740357334
+ 0.9388850548270838
+
+julia> @time cross_val_score( DecisionTreeClassifier(), X_train, y_train, cv=10)
+  3.397678 seconds (73 allocations: 4.234 KiB)
+10-element Array{Float64,1}:
+ 0.9397331697592394
+ 0.9356693758625978
+ 0.9349792976537341
+ 0.9389664161938353
+ 0.9408066247508051
+ 0.9367428308541634
+ 0.9365894801410827
+ 0.936282778714921
+ 0.9365079365079365
+ 0.9411088106740281
+
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+//// NAIVE GAUSSIAN BAYES /////////////////////////////////////////////////////////////////////////////
+
+julia> print(classification_report(y_train,y_pred))
+              precision    recall  f1-score   support
+
+           0       0.90      0.96      0.93    113188
+           1       0.52      0.29      0.37     17230
+
+    accuracy                           0.87    130418
+   macro avg       0.71      0.62      0.65    130418
+weighted avg       0.85      0.87      0.85    130418
+
+              precision    recall  f1-score   support
+
+           0       0.90      0.96      0.93     55700
+           1       0.53      0.29      0.38      8537
+
+    accuracy                           0.87     64237
+   macro avg       0.71      0.63      0.65     64237
+weighted avg       0.85      0.87      0.85     64237
+
+julia> @time cross_val_score( GaussianNB(), X_train, y_train, cv=10)
+  0.245520 seconds (73 allocations: 4.234 KiB)
+10-element Array{Float64,1}:
+ 0.8724888820733017
+ 0.8685017635332004
+ 0.8709553749424935
+ 0.8713387517251955
+ 0.8721055052905996
+ 0.8727955834994633
+ 0.8724122067167612
+ 0.8682717374635792
+ 0.8702553485162181
+ 0.8702553485162181
+
+julia> @time cross_val_score( GaussianNB(), X_train, y_train, cv=10)
+  0.240268 seconds (73 allocations: 4.234 KiB)
+10-element Array{Float64,1}:
+ 0.8724888820733017
+ 0.8685017635332004
+ 0.8709553749424935
+ 0.8713387517251955
+ 0.8721055052905996
+ 0.8727955834994633
+ 0.8724122067167612
+ 0.8682717374635792
+ 0.8702553485162181
+ 0.8702553485162181
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+//// RANDOM FOREST /////////////////////////////////////////////////////////////////////////////
+
+
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00    113188
+           1       1.00      1.00      1.00     17230
+
+    accuracy                           1.00    130418
+   macro avg       1.00      1.00      1.00    130418
+weighted avg       1.00      1.00      1.00    130418
+
+              precision    recall  f1-score   support
+
+           0       0.98      0.97      0.98     55700
+           1       0.81      0.88      0.84      8537
+
+    accuracy                           0.96     64237
+   macro avg       0.90      0.92      0.91     64237
+weighted avg       0.96      0.96      0.96     64237
+
+
+julia> @time cross_val_score( RandomForestClassifier(), X_train, y_train, cv=10)
+118.188128 seconds (73 allocations: 4.234 KiB)
+10-element Array{Float64,1}:
+ 0.9585953074681798
+ 0.9528446557276491
+ 0.95299800644073
+ 0.9539181107192148
+ 0.9569084496242908
+ 0.9561416960588867
+ 0.9546081889280785
+ 0.9516178500230026
+ 0.9545280269917951
+ 0.9562916954221302
+
+julia> @time cross_val_score( RandomForestClassifier(), X_train, y_train, cv=10)
+116.686283 seconds (73 allocations: 4.234 KiB)
+10-element Array{Float64,1}:
+ 0.9578285539027757
+ 0.9526146296580279
+ 0.9526146296580279
+ 0.951694525379543
+ 0.9564483974850483
+ 0.9552982671369422
+ 0.9537647600061341
+ 0.9539181107192148
+ 0.954221302047389
+ 0.955831608005521
+
+//// RANDOM FOREST 13 FEATURES ////////////////////////////////////////////////////////////
+
+julia> print(classification_report(y_test,y_pred))
+              precision    recall  f1-score   support
+
+           0       0.99      0.98      0.98     55700
+           1       0.86      0.91      0.88      8537
+
+    accuracy                           0.97     64237
+   macro avg       0.92      0.94      0.93     64237
+weighted avg       0.97      0.97      0.97     64237
+
+
+julia> @time cross_val_score( RandomForestClassifier(), X_train, y_train, cv=10)
+211.288444 seconds (289.53 k allocations: 15.369 MiB)
+10-element Array{Float64,1}:
+ 0.969559883453458
+ 0.9652660634871952
+ 0.9652660634871952
+ 0.9655727649133569
+ 0.9687164545315136
+ 0.9652660634871952
+ 0.9681797270357307
+ 0.9651893881306548
+ 0.9671804309485469
+ 0.9676405183651561
+
+julia> @time cross_val_score( RandomForestClassifier(), X_train, y_train, cv=10)
+212.299951 seconds (73 allocations: 4.234 KiB)
+10-element Array{Float64,1}:
+ 0.9682564023922712
+ 0.9643459592087104
+ 0.965036037417574
+ 0.9659561416960589
+ 0.9682564023922712
+ 0.9648060113479527
+ 0.9681797270357307
+ 0.965419414200276
+ 0.9657234874626179
+ 0.9684840119622729
+
+Conclusion: using more features marginally improves accuracy at the cost of double computational time, for random forest at least.
+MLP remains to be tested.
