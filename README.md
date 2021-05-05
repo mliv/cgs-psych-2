@@ -67,21 +67,21 @@ This work will focus on the multi-layer perceptron (MLP) and random forest (RFC)
 
 ## Data Characteristics ##
 
-152 patients
+	152 patients
 
-7.03 GB (7,555,228,642 bytes) in EDF+
-2.17 GB (2,337,245,580 bytes) in NPZ 
-2.20 GB (2,368,560,144 bytes) in WAV
-8.62 MB (9,041,752 bytes)  in CSV (after SVD,  5 features)
-53.4 MB (56,005,585 bytes) in CSV (after SVD, 13 features)
+	7.03 GB (7,555,228,642 bytes) in EDF+
+	2.17 GB (2,337,245,580 bytes) in NPZ 
+	2.20 GB (2,368,560,144 bytes) in WAV
+	8.62 MB (9,041,752 bytes)  in CSV (after SVD,  5 features)
+	53.4 MB (56,005,585 bytes) in CSV (after SVD, 13 features)
 
 
-194,655 total epochs (WAV files)
-21,469 stage 1
-68,633 stage 2
-12,991 stage 3/4
-25,767 stage R
-65,795 stage W
+	194,655 total epochs (WAV files)
+	21,469 stage 1
+	68,633 stage 2
+	12,991 stage 3/4
+	25,767 stage R
+	65,795 stage W
 
 
 
