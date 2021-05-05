@@ -4,16 +4,27 @@
 //// MLP ////////////////////////////////////////////////////////////////
 
 
+TRAIN:
+              precision    recall  f1-score   support
 
+           0       0.99      0.95      0.97    113188
+           1       0.74      0.93      0.82     17230
+
+    accuracy                           0.95    130418
+   macro avg       0.86      0.94      0.90    130418
+weighted avg       0.96      0.95      0.95    130418
+
+TEST:
 
               precision    recall  f1-score   support
 
-           0       0.87      1.00      0.93     55700
-           1       0.00      0.00      0.00      8537
-	
-    accuracy                           0.87     64237
-   macro avg       0.43      0.50      0.46     64237
-weighted avg       0.75      0.87      0.81     64237
+           0       0.99      0.95      0.97     55700
+           1       0.74      0.93      0.83      8537
+
+    accuracy                           0.95     64237
+   macro avg       0.87      0.94      0.90     64237
+weighted avg       0.96      0.95      0.95     64237
+
 
 julia> # Cross validation
 
