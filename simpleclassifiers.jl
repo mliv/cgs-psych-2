@@ -66,7 +66,8 @@ print(classification_report(y_test,y_pred))
 
 # Cross validation
 @sk_import model_selection: cross_val_score
-cross_val_score(LogisticRegression(penalty=:none ), X_train, y_train)
+@time cross_val_score(LogisticRegression(penalty=:none ), X_train, y_train, cv=10)
+@time cross_val_score(LogisticRegression(penalty=:none ), X_train, y_train, cv=10)
 
 # Confusion matrix
 @sk_import metrics: plot_confusion_matrix
@@ -340,6 +341,7 @@ PyPlot.gcf()
 plot_confusion_matrix(rfc,X_test,y_test)
 PyPlot.gcf()
 
+@sk_import model_selection: cross_val_score
 @time cross_val_score( RandomForestClassifier(), X_train, y_train, cv=10)
 @time cross_val_score( RandomForestClassifier(), X_train, y_train, cv=10)
 
