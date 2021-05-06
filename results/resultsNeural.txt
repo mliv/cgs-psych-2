@@ -129,3 +129,160 @@ weighted avg       0.95      0.94      0.94    130418
     accuracy                           0.94     64237
    macro avg       0.87      0.90      0.88     64237
 weighted avg       0.95      0.94      0.94     64237
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+2 Hidden Layers, 50 and 10 units
+Conclusion: 
+Great! Or maybe just an artifact of a good initialization
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+
+julia> trainModel(         mlp_2layer)
+              precision    recall  f1-score   support
+
+           0       0.99      0.94      0.96    113188
+           1       0.70      0.94      0.80     17230
+
+    accuracy                           0.94    130418
+   macro avg       0.84      0.94      0.88    130418
+weighted avg       0.95      0.94      0.94    130418
+
+
+julia> testModel(          mlp_2layer)
+              precision    recall  f1-score   support
+
+           0       0.99      0.94      0.96     55700
+           1       0.70      0.93      0.80      8537
+
+    accuracy                           0.94     64237
+   macro avg       0.84      0.94      0.88     64237
+weighted avg       0.95      0.94      0.94     64237
+
+
+julia> crossValidateModel( mlp_2layer)
+ 76.266572 seconds (243.99 k allocations: 12.913 MiB)
+mean accuracy:0.8996380867671641
+ 67.633229 seconds (143.13 k allocations: 7.589 MiB)
+mean precision:0.7390816084980204
+ 33.108204 seconds (87 allocations: 4.750 KiB)
+mean recall:0.47608821822402786
+
+Note: not robust to cross-validation at all. 
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+3 Hidden Layers, 50, 10, 10
+Conclusion: 
+Note the results are worse than the 2-layer model above. Randomness, most likely.
+The first try failed to converge.
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+julia> trainModel(         mlp_3layer)
+              precision    recall  f1-score   support
+
+           0       0.97      0.96      0.97    113188
+           1       0.77      0.80      0.78     17230
+
+    accuracy                           0.94    130418
+   macro avg       0.87      0.88      0.88    130418
+weighted avg       0.94      0.94      0.94    130418
+
+julia> crossValidateModel( mlp_3layer)
+ 20.905781 seconds (72 allocations: 4.094 KiB)
+mean accuracy:
+0.9037939548221872
+ 42.658514 seconds (87 allocations: 4.750 KiB)
+mean precision:
+0.6942183889083454
+ 49.865900 seconds (87 allocations: 4.750 KiB)
+mean recall:
+0.8562971561230412
+
+julia> testModel(          mlp_3layer)
+              precision    recall  f1-score   support
+
+           0       0.97      0.97      0.97     55700
+           1       0.78      0.79      0.79      8537
+
+    accuracy                           0.94     64237
+   macro avg       0.87      0.88      0.88     64237
+weighted avg       0.94      0.94      0.94     64237
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+4 Hidden Layers, 50, 10, 10, 10
+Conclusion: 
+Fine.
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+julia> trainModel(         mlp_4layer)
+              precision    recall  f1-score   support
+
+           0       0.98      0.96      0.97    113188
+           1       0.76      0.87      0.81     17230
+
+    accuracy                           0.95    130418
+   macro avg       0.87      0.91      0.89    130418
+weighted avg       0.95      0.95      0.95    130418
+
+julia> crossValidateModel( mlp_4layer)
+ 16.533705 seconds (72 allocations: 4.094 KiB)
+mean accuracy:
+0.925255716235489
+ 98.833037 seconds (87 allocations: 4.750 KiB)
+mean precision:
+0.7468079637954018
+ 83.554398 seconds (87 allocations: 4.750 KiB)
+mean recall:
+0.8016250725478815
+
+julia> testModel(          mlp_4layer)
+              precision    recall  f1-score   support
+
+           0       0.98      0.96      0.97     55700
+           1       0.77      0.87      0.81      8537
+
+    accuracy                           0.95     64237
+   macro avg       0.87      0.91      0.89     64237
+weighted avg       0.95      0.95      0.95     64237
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+2 Hidden Layers (100, 50
+Conclusion: 
+Fine.
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+
+julia> trainModel(         mlp_2layerlarge)
+  warnings.warn(
+              precision    recall  f1-score   support
+
+           0       0.98      0.96      0.97    113188
+           1       0.78      0.86      0.82     17230
+
+    accuracy                           0.95    130418
+   macro avg       0.88      0.91      0.89    130418
+weighted avg       0.95      0.95      0.95    130418
+
+julia> crossValidateModel( mlp_2layerlarge)
+  warnings.warn(
+  warnings.warn(
+230.340956 seconds (72 allocations: 4.094 KiB)
+mean accuracy:
+0.9431980248125258
+190.193413 seconds (87 allocations: 4.750 KiB)
+mean precision:
+0.737155195985098
+187.723024 seconds (87 allocations: 4.750 KiB)
+mean recall:
+0.8538015089959373
+
+julia> testModel(          mlp_2layerlarge)
+              precision    recall  f1-score   support
+
+           0       0.98      0.96      0.97     55700
+           1       0.78      0.86      0.82      8537
+
+    accuracy                           0.95     64237
+   macro avg       0.88      0.91      0.90     64237
+weighted avg       0.95      0.95      0.95     64237
