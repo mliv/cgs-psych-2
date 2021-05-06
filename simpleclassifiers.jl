@@ -5,6 +5,8 @@ This only needs one file, audio_recoded_combined_binary.csv, in the base folder
 -Matei 
 =#
 
+using Statistics
+
 # Logistic Regression ##########################################################
 # https://coinslab.github.io/CognitiveModelingLabWebsite/page/LogisticRegression/
 #
@@ -41,7 +43,7 @@ This only needs one file, audio_recoded_combined_binary.csv, in the base folder
 # TODO: Someone better with the theory can probably figure out why
 ################################################################################
 
-using DataFrames, CSV, ScikitLearn, PyPlot
+using DataFrames, CSV, ScikitLearn, PyPlot, Statistics
 
 data = CSV.File("audio_recoded_combined_binary.csv") |> DataFrame
 
@@ -66,8 +68,12 @@ print(classification_report(y_test,y_pred))
 
 # Cross validation
 @sk_import model_selection: cross_val_score
-@time cross_val_score(LogisticRegression(penalty=:none ), X_train, y_train, cv=10)
-@time cross_val_score(LogisticRegression(penalty=:none ), X_train, y_train, cv=10)
+@time cva = (cross_val_score(LogisticRegression(penalty=:none ), X_train, y_train, cv=10))
+mean(cva)
+@time cvp = cross_val_score(LogisticRegression(penalty=:none ), X_train, y_train, cv=10, scoring="precision")
+mean(cvp)
+@time cvr = cross_val_score(LogisticRegression(penalty=:none ), X_train, y_train, cv=10, scoring="recall")
+mean(cvr)
 
 # Confusion matrix
 @sk_import metrics: plot_confusion_matrix
@@ -197,7 +203,7 @@ PyPlot.gcf()
 #
 ################################################################################
 
-using DataFrames, CSV, ScikitLearn, PyPlot
+using DataFrames, CSV, ScikitLearn, PyPlot, Statistics
 
 data = CSV.File("audio_recoded_combined_binary.csv") |> DataFrame
 X = convert(Array, data[!,Not(:Class)])
@@ -225,9 +231,13 @@ plot_confusion_matrix(tree,X_test,y_test)
 PyPlot.gcf()
 
 @sk_import model_selection: cross_val_score
-cross_val_score( DecisionTreeClassifier(), X_train, y_train)
-@time cross_val_score( DecisionTreeClassifier(), X_train, y_train, cv=10)
-@time cross_val_score( DecisionTreeClassifier(), X_train, y_train, cv=10)
+@time cva = cross_val_score(DecisionTreeClassifier(), X_train, y_train, cv=10)
+mean(cva)
+@time cvp = cross_val_score(DecisionTreeClassifier(), X_train, y_train, cv=10, scoring="precision")
+mean(cvp)
+@time cvr = cross_val_score(DecisionTreeClassifier(), X_train, y_train, cv=10, scoring="recall")
+mean(cvr)
+
 
 # Naive Bayes ##################################################################
 # https://coinslab.github.io/CognitiveModelingLabWebsite/page/nbclassifier/
@@ -258,7 +268,7 @@ cross_val_score( DecisionTreeClassifier(), X_train, y_train)
 #
 ################################################################################
 
-using DataFrames, CSV, ScikitLearn, PyPlot
+using DataFrames, CSV, ScikitLearn, PyPlot, Statistics
 
 data = CSV.File("audio_recoded_combined_binary.csv") |> DataFrame
 X = convert(Array, data[!,Not(:Class)])
@@ -284,8 +294,13 @@ PyPlot.gcf()
 plot_confusion_matrix(gnb,X_test,y_test)
 PyPlot.gcf()
 
-@time cross_val_score( GaussianNB(), X_train, y_train, cv=10)
-@time cross_val_score( GaussianNB(), X_train, y_train, cv=10)
+@sk_import model_selection: cross_val_score
+@time cva = cross_val_score(GaussianNB(), X_train, y_train, cv=10)
+mean(cva)
+@time cvp = cross_val_score(GaussianNB(), X_train, y_train, cv=10, scoring="precision")
+mean(cvp)
+@time cvr = cross_val_score(GaussianNB(), X_train, y_train, cv=10, scoring="recall")
+mean(cvr)
 
 # Random Forest ################################################################
 # https://coinslab.github.io/CognitiveModelingLabWebsite/page/nbclassifier/
@@ -316,9 +331,9 @@ PyPlot.gcf()
 #
 ################################################################################
 
-using DataFrames, CSV, ScikitLearn, PyPlot
+using DataFrames, CSV, ScikitLearn, PyPlot, Statistics
 
-data = CSV.File("audio_recoded_combined_binary_13f.csv") |> DataFrame
+data = CSV.File("audio_recoded_combined_binary.csv") |> DataFrame
 X = convert(Array, data[!,Not(:Class)])
 y = convert(Array, data[!,:Class]) # :Class is our target variable
 
@@ -342,7 +357,9 @@ plot_confusion_matrix(rfc,X_test,y_test)
 PyPlot.gcf()
 
 @sk_import model_selection: cross_val_score
-@time cross_val_score( RandomForestClassifier(), X_train, y_train, cv=10)
-@time cross_val_score( RandomForestClassifier(), X_train, y_train, cv=10)
-
-
+@time cva = cross_val_score(RandomForestClassifier(), X_train, y_train, cv=10)
+mean(cva)
+@time cvp = cross_val_score(RandomForestClassifier(), X_train, y_train, cv=10, scoring="precision")
+mean(cvp)
+@time cvr = cross_val_score(RandomForestClassifier(), X_train, y_train, cv=10, scoring="recall")
+mean(cvr)

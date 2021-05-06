@@ -1,0 +1,366 @@
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+//// COMPARISON ////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+All values from 10-fold cross-validation.
+
+Logistic: 
+	Accuracy:  0.8377831168896378
+	Precision: 0.0
+	Recall:    0.0
+
+Gaussian Naive Bayesian: 
+	Accuracy:  0.870938050227703
+	Precision: 0.520960548098636
+	Recall:    0.2873476494486361
+
+Decision Tree: 
+	Accuracy:  0.9372019434395392
+	Precision: 0.7630107441071559
+	Recall:    0.7633778293673823
+
+Random Forest: 
+	Accuracy:  0.9546075074869449
+	Precision: 0.8033705822215295
+	Recall:    0.8687753917585607
+
+Multi-Layer Perceptron: 
+	Accuracy:  
+	Precision: 
+	Recall:    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//// LOGISTIC /////////////////////////////////////////////////////////////////////////
+
+julia> print(classification_report(y_train,y_pred))
+              precision    recall  f1-score   support
+
+           0       0.86      0.97      0.91    113188
+           1       0.00      0.00      0.00     17230
+
+    accuracy                           0.84    130418
+   macro avg       0.43      0.48      0.46    130418
+weighted avg       0.75      0.84      0.79    130418
+
+julia> # Testing performance
+
+julia> print(classification_report(y_test,y_pred))
+              precision    recall  f1-score   support
+
+           0       0.86      0.96      0.91     55700
+           1       0.00      0.00      0.00      8537
+
+    accuracy                           0.84     64237
+   macro avg       0.43      0.48      0.46     64237
+weighted avg       0.75      0.84      0.79     64237
+
+julia> # Cross validation
+
+julia> @sk_import model_selection: cross_val_score
+┌ Warning: Module model_selection has been ported to Julia - try `import ScikitLearn: CrossValidation` instead
+└ @ ScikitLearn.Skcore C:\Users\Matei\.julia\packages\ScikitLearn\NJwUf\src\Skcore.jl:179
+WARNING: redefinition of constant cross_val_score. This may fail, cause incorrect answers, or produce other errors.
+PyObject <function cross_val_score at 0x000000004F41E820>
+
+julia> @time cva = (cross_val_score(LogisticRegression(penalty=:none ), X_train, y_train, cv=10))
+  1.985457 seconds (90 allocations: 5.328 KiB)
+10-element Array{Float64,1}:
+ 0.8340745284465573
+ 0.837601594847416
+ 0.8371415427081736
+ 0.8369881919950928
+ 0.8378316209170372
+ 0.841358687317896
+ 0.8392117773347646
+ 0.8395184787609262
+ 0.8358254735066329
+ 0.8382792730618818
+
+julia> mean(cva)
+0.8377831168896378
+
+julia> @time cvp = cross_val_score(LogisticRegression(penalty=:none ), X_train, y_train, cv=10, scoring="precision")
+  2.239362 seconds (222.06 k allocations: 11.798 MiB)
+10-element Array{Float64,1}:
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+
+julia> mean(cvp)
+0.0
+
+julia> @time cvr = cross_val_score(LogisticRegression(penalty=:none ), X_train, y_train, cv=10, scoring="recall")
+  1.810937 seconds (106 allocations: 6.000 KiB)
+10-element Array{Float64,1}:
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+
+julia> mean(cvr)
+0.0
+
+
+
+
+
+//// GN BAYES ////////////////////////////////////////////////////////////////////////////////////////
+
+
+julia> print(classification_report(y_train,y_pred))
+              precision    recall  f1-score   support
+
+           0       0.90      0.96      0.93    113188
+           1       0.52      0.29      0.37     17230
+
+    accuracy                           0.87    130418
+   macro avg       0.71      0.62      0.65    130418
+weighted avg       0.85      0.87      0.85    130418
+
+julia> print(classification_report(y_test,y_pred))
+              precision    recall  f1-score   support
+
+           0       0.90      0.96      0.93     55700
+           1       0.53      0.29      0.38      8537
+
+    accuracy                           0.87     64237
+   macro avg       0.71      0.63      0.65     64237
+weighted avg       0.85      0.87      0.85     64237
+
+julia> @time cva = cross_val_score(GaussianNB(), X_train, y_train, cv=10)
+  0.263717 seconds (73 allocations: 4.234 KiB)
+10-element Array{Float64,1}:
+ 0.8724888820733017
+ 0.8685017635332004
+ 0.8709553749424935
+ 0.8713387517251955
+ 0.8721055052905996
+ 0.8727955834994633
+ 0.8724122067167612
+ 0.8682717374635792
+ 0.8702553485162181
+ 0.8702553485162181
+
+julia> mean(cva)
+0.870938050227703
+
+julia> @time cvp = cross_val_score(GaussianNB(), X_train, y_train, cv=10, scoring="precision")
+  0.259454 seconds (89 allocations: 4.906 KiB)
+10-element Array{Float64,1}:
+ 0.5304878048780488
+ 0.5042283298097252
+ 0.521551724137931
+ 0.5249722530521642
+ 0.5287356321839081
+ 0.5332640332640333
+ 0.531416400425985
+ 0.5025746652935118
+ 0.5165421558164355
+ 0.515832482124617
+
+julia> mean(cvp)
+0.520960548098636
+
+julia> @time cvr = cross_val_score(GaussianNB(), X_train, y_train, cv=10, scoring="recall")
+  0.257789 seconds (92 allocations: 9.516 KiB)
+10-element Array{Float64,1}:
+ 0.3029599535693558
+ 0.2768427161926872
+ 0.2809053975623912
+ 0.2745211839814277
+ 0.293673824724318
+ 0.2977365060940221
+ 0.289611143354614
+ 0.2832269297736506
+ 0.2809053975623912
+ 0.2930934416715032
+
+julia> mean(cvr)
+0.2873476494486361
+
+
+
+//// TREE ///////////////////////////////////////////////////////////////////////////////////////
+
+julia> print(classification_report(y_train,y_pred))
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00    113188
+           1       1.00      1.00      1.00     17230
+
+    accuracy                           1.00    130418
+   macro avg       1.00      1.00      1.00    130418
+weighted avg       1.00      1.00      1.00    130418
+
+julia> print(classification_report(y_test,y_pred))
+              precision    recall  f1-score   support
+
+           0       0.96      0.97      0.97     55700
+           1       0.77      0.77      0.77      8537
+
+    accuracy                           0.94     64237
+   macro avg       0.87      0.87      0.87     64237
+weighted avg       0.94      0.94      0.94     64237
+
+julia> @time cva = cross_val_score(DecisionTreeClassifier(), X_train, y_train, cv=10)
+  3.565435 seconds (73 allocations: 4.234 KiB)
+10-element Array{Float64,1}:
+ 0.9386597147676736
+ 0.9355927005060574
+ 0.9363594540714615
+ 0.9385063640545929
+ 0.9395031436896182
+ 0.9354393497929765
+ 0.936282778714921
+ 0.93421254408833
+ 0.936431255271835
+ 0.9410321294379266
+
+julia> mean(cva)
+0.9372019434395392
+
+julia> @time cvp = cross_val_score(DecisionTreeClassifier(), X_train, y_train, cv=10, scoring="precision")
+  3.507378 seconds (89 allocations: 4.906 KiB)
+10-element Array{Float64,1}:
+ 0.7678255745433117
+ 0.7498565691336776
+ 0.7520045819014891
+ 0.7594285714285715
+ 0.7775147928994083
+ 0.7593768032313907
+ 0.7630662020905923
+ 0.7577712609970675
+ 0.7633587786259542
+ 0.7799043062200957
+
+julia> mean(cvp)
+0.7630107441071559
+
+julia> @time cvr = cross_val_score(DecisionTreeClassifier(), X_train, y_train, cv=10, scoring="recall")
+  3.510049 seconds (89 allocations: 4.906 KiB)
+10-element Array{Float64,1}:
+ 0.7533372025536854
+ 0.7620429483459082
+ 0.7690075449796866
+ 0.7858386535113174
+ 0.7626233313987232
+ 0.7637840975043528
+ 0.7690075449796866
+ 0.7533372025536854
+ 0.7573998839233894
+ 0.7573998839233894
+
+julia> mean(cvr)
+0.7633778293673823
+
+
+//// FOREST //////////////////////////////////////////////////////////////////////////////////
+
+
+julia> print(classification_report(y_train,y_pred))
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00    113188
+           1       1.00      1.00      1.00     17230
+
+    accuracy                           1.00    130418
+   macro avg       1.00      1.00      1.00    130418
+weighted avg       1.00      1.00      1.00    130418
+
+
+julia> print(classification_report(y_test,y_pred))
+              precision    recall  f1-score   support
+
+           0       0.98      0.97      0.97     55700
+           1       0.81      0.88      0.84      8537
+
+    accuracy                           0.96     64237
+   macro avg       0.90      0.92      0.91     64237
+weighted avg       0.96      0.96      0.96     64237
+
+
+
+julia> @time cva = cross_val_score(RandomForestClassifier(), X_train, y_train, cv=10)
+117.381831 seconds (286.76 k allocations: 15.253 MiB)
+10-element Array{Float64,1}:
+ 0.9587486581812605
+ 0.95299800644073
+ 0.9520779021622451
+ 0.9528446557276491
+ 0.9562183714154271
+ 0.9552982671369422
+ 0.954148136788836
+ 0.9526146296580279
+ 0.9544513457556936
+ 0.9566751016026378
+
+julia> mean(cva)
+0.9546075074869449
+
+julia> @time cvp = cross_val_score(RandomForestClassifier(), X_train, y_train, cv=10, scoring="precision")
+119.088604 seconds (222.05 k allocations: 11.797 MiB)
+10-element Array{Float64,1}:
+ 0.8146341463414634
+ 0.7947761194029851
+ 0.7922146238821672
+ 0.7916010498687664
+ 0.8146739130434782
+ 0.8083832335329342
+ 0.8010752688172043
+ 0.8019271948608137
+ 0.8029978586723768
+ 0.8114224137931034
+
+julia> mean(cvp)
+0.8033705822215295
+
+julia> @time cvr = cross_val_score(RandomForestClassifier(), X_train, y_train, cv=10, scoring="recall")
+119.854122 seconds (89 allocations: 4.906 KiB)
+10-element Array{Float64,1}:
+ 0.877539175856065
+ 0.8595473012188044
+ 0.8711549622751016
+ 0.8705745792222868
+ 0.8705745792222868
+ 0.8624492164828786
+ 0.8665118978525828
+ 0.8682530470110272
+ 0.8723157283807312
+ 0.8688334300638422
+
+julia> mean(cvr)
+0.8687753917585607
+
+
+
+
+
