@@ -29,8 +29,8 @@ Random Forest:
 	Recall:    0.8687753917585607
 
 Multi-Layer Perceptron: 
-	Accuracy:  
-	Precision: 
+	Accuracy:  0.9425078787000917
+	Precision: 0.7354607877062405
 	Recall:    
 
 
@@ -362,5 +362,94 @@ julia> mean(cvr)
 
 
 
+//// MLP 6 Layer Default Nodes ///////////////////////////////////////////////////////////////////////////
+
+# Again this looks wrong, I have no idea why. This is why I trust the cross-validation more.
+# It may just be the extreme variability or the algorithm yet again failing to run and converge properly
+
+julia> print(classification_report(y_train,y_pred))
+              precision    recall  f1-score   support
+
+           0       0.96      0.98      0.97    113188
+           1       0.84      0.70      0.76     17230
+
+    accuracy                           0.94    130418
+   macro avg       0.90      0.84      0.86    130418
+weighted avg       0.94      0.94      0.94    130418
+
+
+julia> print(classification_report(y_test,y_pred))
+              precision    recall  f1-score   support
+
+           0       0.96      0.98      0.97     55700
+           1       0.84      0.70      0.77      8537
+
+    accuracy                           0.94     64237
+   macro avg       0.90      0.84      0.87     64237
+weighted avg       0.94      0.94      0.94     64237
+
+
+julia> @time cva = cross_val_score(MLPClassifier(hidden_layer_sizes=(30, 50, 60, 10, 10, 10)), X_train, y_train, cv=10)
+1689.771638 seconds (556.21 k allocations: 29.127 MiB, 0.00% gc time)
+10-element Array{Float64,1}:
+ 0.9335224658794663
+ 0.9465572764913357
+ 0.947170679343659
+ 0.9490875632571691
+ 0.9528446557276491
+ 0.926314982364668
+ 0.9512344732403005
+ 0.9408066247508051
+ 0.9266160570508397
+ 0.9509240088950234
+
+julia> mean(cva)
+0.9425078787000917
+
+
+julia> @time cvp = cross_val_score(MLPClassifier(hidden_layer_sizes=(30, 50, 60, 10, 10, 10)), X_train, y_train, cv=10, scoring="precision")
+1698.577981 seconds (244.89 k allocations: 12.940 MiB)
+10-element Array{Float64,1}:
+ 0.7001888574126535
+ 0.6584867075664622
+ 0.7572406529752501
+ 0.7493845396356474
+ 0.6745283018867925
+ 0.7770374167093798
+ 0.7904
+ 0.740535083291267
+ 0.6961959353830119
+ 0.8106103822019395
+
+julia> mean(cvp)
+0.7354607877062405
+
+
+
+//// MLP 1 Layer 50 Nodes ////////////////////////////////////////////////////////////////////////////////
+
+              precision    recall  f1-score   support
+
+           0       0.97      0.95      0.96    113188
+           1       0.71      0.79      0.75     17230
+
+    accuracy                           0.93    130418
+   macro avg       0.84      0.87      0.85    130418
+weighted avg       0.93      0.93      0.93    130418
+              precision    recall  f1-score   support
+
+           0       0.97      0.95      0.96     55700
+           1       0.72      0.80      0.75      8537
+
+    accuracy                           0.93     64237
+   macro avg       0.84      0.87      0.86     64237
+weighted avg       0.93      0.93      0.93     64237
+
+
+
+
+
+
+#
 
 

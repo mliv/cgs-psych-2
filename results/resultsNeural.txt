@@ -56,6 +56,30 @@ weighted avg       0.75      0.85      0.80    130418
 weighted avg       0.75      0.85      0.80     64237
 
 /////////////////////////////////////////////////////////////////////////////////////////////
+1 Hidden Layer, 40 units
+Conclusion: 
+Works fine. Not as good as 50, runtime of 50 is worth it
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+
+              precision    recall  f1-score   support
+
+           0       0.97      0.95      0.96    113188
+           1       0.71      0.78      0.74     17230
+
+    accuracy                           0.93    130418
+   macro avg       0.84      0.87      0.85    130418
+weighted avg       0.93      0.93      0.93    130418
+              precision    recall  f1-score   support
+
+           0       0.97      0.95      0.96     55700
+           1       0.71      0.79      0.75      8537
+
+    accuracy                           0.93     64237
+   macro avg       0.84      0.87      0.85     64237
+weighted avg       0.93      0.93      0.93     64237
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 1 Hidden Layer, 50 units
 Conclusion: 
 as good as decision tree roughly
@@ -86,7 +110,7 @@ weighted avg       0.94      0.94      0.94     64237
 /////////////////////////////////////////////////////////////////////////////////////////////
 1 Hidden Layer, 100 units
 Conclusion:
-Not meaningfully better than 50 units
+Not meaningfully better than 50 units, likely not worth it.
 /////////////////////////////////////////////////////////////////////////////////////////////
 
               precision    recall  f1-score   support

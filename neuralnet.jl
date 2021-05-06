@@ -51,9 +51,9 @@ function testModel(model)
 end
 
 
+testModel(mlp_1layer50)
 
-testModel(mlp_1layer40)
-
+@time cva = cross_val_score(mlp_1layer50, X_train, y_train, cv=10)
 
 # Cross validation
 ################################################################################
@@ -62,43 +62,41 @@ testModel(mlp_1layer40)
 
 function crossValidateModel(model)
 
-    fit!(model,X_train,y_train)
+    #fit!(model,X_train,y_train)
     @time cva = cross_val_score(model, X_train, y_train, cv=10)
-    print(mean(cva))
+    println("mean accuracy:" * mean(cva))
     @time cvp = cross_val_score(model, X_train, y_train, cv=10, scoring="precision")
-    print(mean(cvp))
+    println("mean precision:" * mean(cvp))
     @time cvr = cross_val_score(model, X_train, y_train, cv=10, scoring="recall")
-    print(mean(cvr))
+    println("mean recall:" * mean(cvr))
 
 end
 
-#=
-@sk_import model_selection: cross_val_score
-cross_val_score( MLPClassifier(hidden_layer_sizes=(30, 50, 60, 10, 10, 10)), X_train, y_train)
-@time cross_val_score( MLPClassifier(hidden_layer_sizes=(30, 50, 60, 10, 10, 10)), X_train, y_train, cv=10)
-@time cross_val_score( MLPClassifier(hidden_layer_sizes=(30, 50, 60, 10, 10, 10)), X_train, y_train, cv=10)
 
-@sk_import model_selection: cross_val_score
-@time cva = cross_val_score(RandomForestClassifier(), X_train, y_train, cv=10)
-mean(cva)
-@time cvp = cross_val_score(RandomForestClassifier(), X_train, y_train, cv=10, scoring="precision")
-mean(cvp)
-@time cvr = cross_val_score(RandomForestClassifier(), X_train, y_train, cv=10, scoring="recall")
-mean(cvr)
+
+
+@time crossValidateModel(mlp_1layer50)
+
+# Validation and learning curves
+# Will get this to work eventually -Matei
+################################################################################
+
+#=
+@sk_import model_selection: validation_curve
+@sk_import model_selection: learning_curve
+
+using Plots, StatsPlots
+
+
+validation_curve(mlp_1layer50, X, y, 
+    param_name="gamma", param_range=np.logspace(-6, -1, 5), scoring="accuracy")
+
+fit!(mlp_1layer50,X_train,y_train)
+train_sizes, train_scores, valid_scores = learning_curve(
+    mlp_1layer50, X, y, train_sizes=[100, 500, 1000], cv=2)
+
+plot(train_scores, valid_scores)
 =#
 
 
-# Confusion matrix
-################################################################################
 
-
-@sk_import metrics: plot_confusion_matrix
-
-
-
-plot_confusion_matrix(mlp_6layer,X_train,y_train)
-PyPlot.gcf()
-
-@sk_import metrics: plot_confusion_matrix
-plot_confusion_matrix(mlp_6layer,X_test,y_test)
-PyPlot.gcf()

@@ -135,7 +135,7 @@ PyPlot.gcf()
 #
 ################################################################################
 
-using DataFrames, CSV, ScikitLearn, PyPlot
+using DataFrames, CSV, ScikitLearn, PyPlot, Statistics
 
 data = CSV.File("audio_recoded_combined_binary.csv") |> DataFrame
 
@@ -160,9 +160,13 @@ print(classification_report(y_test,y_pred))
 
 # Cross validation
 @sk_import model_selection: cross_val_score
-cross_val_score( MLPClassifier(hidden_layer_sizes=(30, 50, 60, 10, 10, 10)), X_train, y_train)
-@time cross_val_score( MLPClassifier(hidden_layer_sizes=(30, 50, 60, 10, 10, 10)), X_train, y_train, cv=10)
-@time cross_val_score( MLPClassifier(hidden_layer_sizes=(30, 50, 60, 10, 10, 10)), X_train, y_train, cv=10)
+@time cva = cross_val_score(MLPClassifier(hidden_layer_sizes=(30, 50, 60, 10, 10, 10)), X_train, y_train, cv=10)
+mean(cva)
+@time cvp = cross_val_score(MLPClassifier(hidden_layer_sizes=(30, 50, 60, 10, 10, 10)), X_train, y_train, cv=10, scoring="precision")
+mean(cvp)
+@time cvr = cross_val_score(MLPClassifier(hidden_layer_sizes=(30, 50, 60, 10, 10, 10)), X_train, y_train, cv=10, scoring="recall")
+mean(cvr)
+
 
 # Confusion matrix
 @sk_import metrics: plot_confusion_matrix
