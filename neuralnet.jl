@@ -151,8 +151,8 @@ plot(train_scores, valid_scores)
 # Random Forest Comparison
 ################################################################################
 
-
+@sk_import ensemble: RandomForestClassifier
 rfc    = RandomForestClassifier()
-trainModel(         mlp_2layer)
-crossValidateModel( mlp_2layer)
-testModel(          mlp_2layer)
+trainModel(         rfc)
+crossValidateModel( rfc)
+testModel(          rfc)
